@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+
+// a struct that stores the Log File and a map for Key-value pairs.
 type Store struct {
 	Value map[string]string 
 	LogFile *os.File
@@ -30,6 +32,7 @@ func NewStore() *Store {
 
 }
 
+// Set command---adds the key value pair to the map, appends the log file with the timestamp, command, key and value.
 func (s *Store) Set(key, value string) {
 	t := time.Now().Unix()
 
@@ -37,6 +40,7 @@ func (s *Store) Set(key, value string) {
 	fmt.Fprintf(s.LogFile, "%d SET %s %s\n", t, key, value)
 }
 
+// Get command---retrieves the value of a key from the map, if the key is not found it returns an error message.
 func (s *Store) Get(key string) (string, error) {
 	val, ok := s.Value[key]
 	// returning an error message if the key is not found
@@ -47,6 +51,7 @@ func (s *Store) Get(key string) (string, error) {
 	return val, nil
 }
 
+// Delete command---removes a key from the map and appends the log file with the timestamp, command, and key.
 func (s *Store) Delete(key string) {
 	t := time.Now().Unix()
 
