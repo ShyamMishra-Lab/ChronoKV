@@ -7,9 +7,40 @@ What it is? --- a networked database where you can store, retrieve and delete ke
 - SET / GET / DELETE key-value pairs over a network
 - Time travel queries — GET key AT timestamp
 - Data persists across restarts via append-only log
-- Data distributed across multiple nodes
+- Data distributed across multiple nodes using a simplified version of RAFT
 - Fault tolerant — survives one node going down
 - Live dashboard showing cluster health
+
+## Replication — Simplified Raft
+
+ChronoKV uses a simplified implementation of the Raft consensus algorithm
+for replication and fault tolerance.
+
+### What we implement
+
+Node States
+Every node is always in one of three states:
+- Follower — default state, listens to leader
+- Candidate — requesting votes to become leader
+- Leader — handles all writes, sends heartbeats to followers
+
+Leader Election
+- On startup nodes vote for a leader
+- Node with majority votes becomes leader
+- Leader sends periodic heartbeats to followers
+- If heartbeats stop, a new election begins
+- Every election has a term number — messages from older terms are ignored
+
+Log Replication
+- All writes go to the leader only
+- Leader appends to its log and sends to all followers
+- Write is confirmed only when majority of nodes acknowledge
+- Guarantees no data loss even if a node dies mid-write
+
+PS: thanks to claude for explaining components
+
+### What we leave for later (towards full Raft)
+--- lagbhag sab jo RAFT ke bare main complicated hai
 
 
 ## Architecture
