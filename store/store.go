@@ -13,6 +13,8 @@ type Store struct {
 	LogFile *os.File
 }
 
+// a constructor function that initializes the Store struct, creates a log file and returns a pointer to the Store struct. 
+// If there is an error opening the log file, it returns nil.
 func NewStore() *Store {
 	data := make(map[string]string)
 
@@ -61,4 +63,5 @@ func (s *Store) Delete(key string) {
 
 func (s *Store) GetAt(timestamp int64) string {
 	// GetAt--- a function that retrieves the value of a key at a specific timestamp.
+	return "GetAt function is not implemented yet"
 }
